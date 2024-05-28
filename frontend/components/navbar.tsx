@@ -36,8 +36,8 @@ const NavBar = () => {
                             {
 
                                 <>
-                                    <Nav.Link href="/me"
-                                              className={pathname == "/me" ? "active" : ""}>Profil</Nav.Link>
+                                    <Nav.Link href="/data/profile"
+                                              className={pathname == "/data/profile" ? "active" : ""}>Profil</Nav.Link>
 
                                     <Nav.Link href="/"
                                               className={pathname == "/" ? "active" : ""}>Logout</Nav.Link>
