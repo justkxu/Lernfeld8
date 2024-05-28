@@ -1,10 +1,10 @@
-import {Student} from "@/types/student";
+import {Class} from "@/types/class";
 
-export const fetchAllStudents = async () => {
+export const getClasses = async () => {
     const headers = {
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_BEARER}`,
     };
-    const response = await fetch('https://codify.philipptrashman.dev/api/teachers', {
+    const response = await fetch('https://codify.philipptrashman.dev/api/school_classes', {
         method: 'GET',
         headers,
         mode: 'cors'
@@ -13,6 +13,6 @@ export const fetchAllStudents = async () => {
     if (response.status != 200) {
         throw new Error(response.statusText);
     } else {
-        return await response.json() as Student[]
+        return await response.json() as Class[]
     }
 };

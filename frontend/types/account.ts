@@ -3,4 +3,5 @@ export type Account = {
     name: string;
     last_name: string;
     birthday: string;
+    username: string;
 }

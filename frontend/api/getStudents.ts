@@ -1,10 +1,10 @@
-import {Account} from "@/types/account";
+import {Student} from "@/types/student";
 
-export const fetchAllUsers = async () => {
+export const getStudents = async () => {
     const headers = {
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_BEARER}`,
     };
-    const response = await fetch('https://codify.philipptrashman.dev/api/users', {
+    const response = await fetch('https://codify.philipptrashman.dev/api/students', {
         method: 'GET',
         headers,
         mode: 'cors'
@@ -13,6 +13,6 @@ export const fetchAllUsers = async () => {
     if (response.status != 200) {
         throw new Error(response.statusText);
     } else {
-        return await response.json() as Account[]
+        return await response.json() as Student[]
     }
 };

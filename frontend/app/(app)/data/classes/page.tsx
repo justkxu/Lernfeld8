@@ -4,30 +4,30 @@ import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Spinner from 'react-bootstrap/Spinner';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import {getUsers} from "@/api/getUsers";
-import {Account} from "@/types/account";
+import {Class} from "@/types/class";
+import {getClasses} from "@/api/getClasses";
 
-const StudentsPage = () => {
-    const [students, setStudents] = useState<Account[]>([]);
+const ClassesPage = () => {
+    const [classes, setClasses] = useState<Class[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(15);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const getClass = async () => {
             setIsLoading(true);
-            const users: Account[] = await getUsers();
-            setStudents(users);
+            const classes: Class[] = await getClasses();
+            setClasses(classes);
             setIsLoading(false);
         }
-        fetchUsers();
+        getClass();
     }, []);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = students.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = classes.slice(indexOfFirstItem, indexOfLastItem);
 
-    const totalPages = Math.ceil(students.length / itemsPerPage);
+    const totalPages = Math.ceil(classes.length / itemsPerPage);
 
     const handleNext = () => {
         if (currentPage < totalPages) {
@@ -59,25 +59,24 @@ const StudentsPage = () => {
 
     return (
         <div>
-            <h1 className={"text-center display-4"}>Benutzer</h1>
-            {students.length > 0 ? (
+            <h1 className={"text-center display-4"}>Klassen</h1>
+            {classes.length > 0 ? (
                 <>
                     <Table striped bordered hover>
                         <thead>
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Nachname</th>
-                            <th>Geburtstag</th>
+                            <th>Klassenlehrer</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {currentItems.map((User, index) => (
+                        {currentItems.map((classes, index) => (
                             <tr key={index}>
-                                <td>{User.id}</td>
-                                <td>{User.name}</td>
-                                <td>{User.last_name}</td>
-                                <td>{User.birthday}</td>
+                                <td>{classes.id}</td>
+                                <td>{classes.grade_id + classes.name}</td>
+                                <td>{classes.head_teacher_name}</td>
+
                             </tr>
                         ))}
                         </tbody>
@@ -99,4 +98,4 @@ const StudentsPage = () => {
     );
 }
 
-export default StudentsPage;
+export default ClassesPage;

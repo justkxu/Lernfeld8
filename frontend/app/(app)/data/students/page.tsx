@@ -4,23 +4,23 @@ import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Spinner from 'react-bootstrap/Spinner';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import {fetchAllStudents} from "@/api/studentService";
 import {Student} from "@/types/student";
+import {getStudents} from "@/api/getStudents";
 
 const StudentsPage = () => {
     const [students, setStudents] = useState<Student[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(20);
+    const [itemsPerPage] = useState(15);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const fetchStudents = async () => {
+        const getStudent = async () => {
             setIsLoading(true);
-            const users: Student[] = await fetchAllStudents();
-            setStudents(users);
+            const student: Student[] = await getStudents();
+            setStudents(student);
             setIsLoading(false);
         }
-        fetchStudents();
+        getStudent();
     }, []);
 
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -68,7 +68,9 @@ const StudentsPage = () => {
                             <th>ID</th>
                             <th>Name</th>
                             <th>Nachname</th>
+                            <th>Username</th>
                             <th>Geburtstag</th>
+                            <th>Klasse</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -77,7 +79,9 @@ const StudentsPage = () => {
                                 <td>{student.id}</td>
                                 <td>{student.account.name}</td>
                                 <td>{student.account.last_name}</td>
+                                <td>{student.account.username}</td>
                                 <td>{student.account.birthday}</td>
+                                <td>{student.school_class_id}</td>
                             </tr>
                         ))}
                         </tbody>
@@ -87,7 +91,7 @@ const StudentsPage = () => {
                                 className="btn btn-outline-secondary mx-2">
                             <i className="bi bi-arrow-left"></i>
                         </button>
-                        <span className={"mx-3 align-self-center"}>Page {currentPage} of {totalPages}</span>
+                        <span className={"mx-3 align-self-center"}>Seite {currentPage} von {totalPages}</span>
                         <button onClick={handleNext}
                                 className="btn btn-outline-secondary mx-2">
                             <i className="bi bi-arrow-right"></i>

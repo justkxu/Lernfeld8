@@ -1,7 +1,7 @@
 'use client'
 
 import { fetchHelloWorld } from '@/api/hello';
-import {fetchAllStudents} from "@/api/studentService";
+import {getStudends} from "@/api/getStudents";
 
 export default function Home() {
   return (
