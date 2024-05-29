@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Spinner from 'react-bootstrap/Spinner';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import {getUsers} from "@/api/getUsers";
+import {getUsers} from "@/api/Users";
 import {Account} from "@/types/account";
 
 const StudentsPage = () => {

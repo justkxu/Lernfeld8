@@ -67,7 +67,9 @@ const ClassesPage = () => {
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Klassenlehrer ID</th>
                             <th>Klassenlehrer</th>
+                            <th>Klassenlehrer Kürzel</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -75,8 +77,9 @@ const ClassesPage = () => {
                             <tr key={index}>
                                 <td>{classes.id}</td>
                                 <td>{classes.grade_id + classes.name}</td>
+                                <td>{classes.head_teacher_id}</td>
                                 <td>{classes.head_teacher_name}</td>
-
+                                <td>{classes.head_teacher_abbreviation}</td>
                             </tr>
                         ))}
                         </tbody>

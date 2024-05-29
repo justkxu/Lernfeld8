@@ -6,12 +6,21 @@ import Spinner from 'react-bootstrap/Spinner';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import {Student} from "@/types/student";
 import {getStudents} from "@/api/getStudents";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import {deleteUserByUsername} from "@/api/Users";
+
 
 const StudentsPage = () => {
     const [students, setStudents] = useState<Student[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(15);
     const [isLoading, setIsLoading] = useState(false);
+    const [modalShow, setModalShow] = React.useState(false);
+    const [InfoModalShow, setInfoModalShow] = React.useState(false);
+    const [infoText, setInfoText] = React.useState('');
+    const [chosenStudent, setChosenStudent] = useState<Student>({account: undefined, id: 0, school_class_id: 0});
+
 
     useEffect(() => {
         const getStudent = async () => {
@@ -29,6 +38,66 @@ const StudentsPage = () => {
 
     const totalPages = Math.ceil(students.length / itemsPerPage);
 
+    async function handleDelete() {
+        console.log(chosenStudent);
+        const response = await deleteUserByUsername(chosenStudent.account.username);
+        if (response == 200) {
+            setInfoText("Successfully deleted")
+        } else {
+            setInfoText("There was a problem deleting this user")
+        }
+        const student: Student[] = await getStudents();
+        setStudents(student);
+        setModalShow(false);
+        setInfoModalShow(true);
+    }
+
+    function handleEdit() {
+        console.log(chosenStudent);
+    }
+
+    function MyVerticallyCenteredModal(props) {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        What do you want to do?
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Button onClick={handleDelete}>Delete</Button>
+                    <Button onClick={handleEdit}>Edit</Button>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={props.onHide}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    function InfoModal(props) {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Body>
+                    <p>{infoText}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={props.onHide}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
     const handleNext = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
@@ -44,6 +113,11 @@ const StudentsPage = () => {
             setCurrentPage(totalPages)
         }
     };
+
+    function handleClick(pStudent: Student) {
+        setChosenStudent(pStudent);
+        setModalShow(true)
+    }
 
     if (isLoading) {
         return (
@@ -62,6 +136,14 @@ const StudentsPage = () => {
             <h1 className={"text-center display-4"}>Schüler</h1>
             {students.length > 0 ? (
                 <>
+                    <MyVerticallyCenteredModal
+                        show={modalShow}
+                        onHide={() => setModalShow(false)}
+                    />
+                    <InfoModal
+                        show={InfoModalShow}
+                        onHide={() => setInfoModalShow(false)}
+                    />
                     <Table striped bordered hover>
                         <thead>
                         <tr>
@@ -75,7 +157,7 @@ const StudentsPage = () => {
                         </thead>
                         <tbody>
                         {currentItems.map((student, index) => (
-                            <tr key={index}>
+                            <tr key={index} onClick={() => handleClick(student)}>
                                 <td>{student.id}</td>
                                 <td>{student.account.name}</td>
                                 <td>{student.account.last_name}</td>
