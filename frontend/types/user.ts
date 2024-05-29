@@ -8,6 +8,7 @@ export type User = {
     birthday: string;
     username: string;
     email: string;
+    password?: string,
     contacts?: Contact[];
     student?: Student;
     parent?: {};
