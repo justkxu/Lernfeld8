@@ -17,7 +17,7 @@ export const getStudents = async () => {
     }
 };
 
-export const updateStudentByUsername = async (username: string, payload: {}) => {
+export const updateStudentByUsername = async (username: string, payload: {school_class_id: string}) => {
     const headers = {
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_BEARER}`,
     };
@@ -31,7 +31,7 @@ export const updateStudentByUsername = async (username: string, payload: {}) => 
     return response.status;
 };
 
-export const addStudentByUsername = async (username: string, payload: {}) => {
+export const addStudentByUsername = async (username: string, payload: {school_class_id: string}) => {
     const headers = {
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_BEARER}`,
     };

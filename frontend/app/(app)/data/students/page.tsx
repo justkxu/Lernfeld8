@@ -81,10 +81,6 @@ const StudentsPage = () => {
         setEditModalShow(true);
     }
 
-    function handleAdd() {
-        setAddModalShow(true);
-    }
-
     async function closeEdit() {
         const student: Student[] = await getStudents();
         setStudents(student);

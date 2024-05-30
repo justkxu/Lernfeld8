@@ -68,6 +68,7 @@ const StudentsPage = () => {
                             <th>ID</th>
                             <th>Name</th>
                             <th>Nachname</th>
+                            <th>Benutzername</th>
                             <th>Geburtstag</th>
                         </tr>
                         </thead>
@@ -77,6 +78,7 @@ const StudentsPage = () => {
                                 <td>{User.id}</td>
                                 <td>{User.name}</td>
                                 <td>{User.last_name}</td>
+                                <td>{User.username}</td>
                                 <td>{User.birthday}</td>
                             </tr>
                         ))}
