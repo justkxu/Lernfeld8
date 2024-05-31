@@ -15,6 +15,9 @@ import {User} from "@/types/user";
 import EditStudentForm from "@/components/editStudentForm";
 import AddStudentForm from "@/components/addStudentForm";
 import EditModal from "@/components/editModal";
+import InfoModal from "@/components/infoModal";
+import AddModal from "@/components/addModal";
+import ChoseModal from "@/components/choseModal";
 
 
 const StudentsPage = () => {
@@ -110,72 +113,6 @@ const StudentsPage = () => {
         setAddModalShow(false);
     }
 
-    function AddModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Hinzufügen
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <AddStudentForm/>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeAdd}>Schließen</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-
-    function ChoseModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="l"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        What do you want to do?
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className={"d-flex justify-content-center gap-5"}>
-                    <Button onClick={handleDelete}>Delete</Button>
-                    <Button onClick={handleEdit}>Edit</Button>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-    function InfoModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Body>
-                    <p>{infoText}</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
     const handleNext = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
@@ -226,19 +163,25 @@ const StudentsPage = () => {
             {students.length > 0 ? (
                 <>
                     <ChoseModal
+                        body={
+                            <Modal.Body className={"d-flex justify-content-center gap-5"}>
+                                <Button onClick={handleDelete}>Delete</Button>
+                                <Button onClick={handleEdit}>Edit</Button>
+                            </Modal.Body>}
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                     />
                     <InfoModal
+                        infoText={infoText}
                         show={InfoModalShow}
                         onHide={() => setInfoModalShow(false)}
                     />
-
                     <AddModal
+                        body={<AddStudentForm/>}
+                        footerFunc={closeAdd}
                         show={AddModalShow}
                         onHide={() => setAddModalShow(false)}
                     />
-
                     <EditModal
                         body={<EditStudentForm email={chosenUser!.email} birthday={chosenUser!.birthday}
                                                school_class_id={chosenUser!.student!.school_class_id.toString()}

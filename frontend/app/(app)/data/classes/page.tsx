@@ -11,6 +11,9 @@ import Modal from "react-bootstrap/Modal";
 import AddClassForm from "@/components/addClassForm";
 import EditClassForm from "@/components/editClassForm";
 import EditModal from "@/components/editModal";
+import InfoModal from "@/components/infoModal";
+import AddModal from "@/components/addModal";
+import ChoseModal from "@/components/choseModal";
 
 const ClassesPage = () => {
     const [classes, setClasses] = useState<Class[]>([]);
@@ -82,71 +85,6 @@ const ClassesPage = () => {
         setEditModalShow(false);
     }
 
-    function AddModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Hinzufügen
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <AddClassForm/>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeAdd}>Schließen</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-    function ChoseModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="l"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        What do you want to do?
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body className={"d-flex justify-content-center gap-5"}>
-                    <Button onClick={handleDelete}>Delete</Button>
-                    <Button onClick={handleEdit}>Edit</Button>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-    function InfoModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Body>
-                    <p>{infoText}</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
     const handleNext = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
@@ -182,15 +120,23 @@ const ClassesPage = () => {
             {classes.length > 0 ? (
                 <>
                     <ChoseModal
+                        body={
+                            <Modal.Body className={"d-flex justify-content-center gap-5"}>
+                                <Button onClick={handleDelete}>Delete</Button>
+                                <Button onClick={handleEdit}>Edit</Button>
+                            </Modal.Body>}
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                     />
                     <InfoModal
+                        infoText={infoText}
                         show={InfoModalShow}
                         onHide={() => setInfoModalShow(false)}
                     />
 
                     <AddModal
+                        body={<AddClassForm/>}
+                        footerFunc={closeAdd}
                         show={AddModalShow}
                         onHide={() => setAddModalShow(false)}
                     />
