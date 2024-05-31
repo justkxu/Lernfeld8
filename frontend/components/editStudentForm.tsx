@@ -7,6 +7,8 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import {updateUserByUsername} from "@/api/Users";
 import {updateStudentByUsername} from "@/api/getStudents";
+import {Class} from "@/types/class";
+import {number} from "prop-types";
 
 interface Values {
     username: string;
@@ -17,7 +19,17 @@ interface Values {
     school_class_id: string;
 }
 
-function EditStudentForm(props: Values) {
+interface Props {
+    username: string;
+    email: string;
+    name: string;
+    last_name: string;
+    birthday: string;
+    school_class_id: string;
+    schoolClasses: Class[];
+}
+
+function EditStudentForm(props: Props) {
     const [values, setValues] = useState<Values>({ username: props.username, email: props.email, name: props.name, last_name: props.last_name, birthday: props.birthday, school_class_id: props.school_class_id});
     const [username] = useState<string>(props.username);
     const [error, setError] = useState<string | null>(null);
@@ -30,6 +42,16 @@ function EditStudentForm(props: Values) {
             [event.target.name]: event.target.value
         });
     };
+
+    function getClassName(school_class_id: number): string {
+        let className = "";
+        props.schoolClasses.forEach(oneClas => {
+            if (oneClas.id == school_class_id) {
+                className = oneClas.grade_id + oneClas.name;
+            }
+        })
+        return className
+    }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -102,8 +124,15 @@ function EditStudentForm(props: Values) {
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicClass">
-                                <Form.Label>KlassenID</Form.Label>
-                                <Form.Control type="text" placeholder="KlassenID" name="school_class_id" value={values.school_class_id} onChange={handleInputChange} />
+                                <Form.Label>Klasse</Form.Label>
+                                <Form.Select name="school_class_id" value={values.school_class_id} onChange={handleInputChange}>
+                                    <option value="">{getClassName(Number(values.school_class_id))}</option>
+                                    {props.schoolClasses.map((schoolClass, index) => (
+                                        <option key={index} value={schoolClass.id}>
+                                            {getClassName(schoolClass.id)}
+                                        </option>
+                                    ))}
+                                </Form.Select>
                             </Form.Group>
 
                             <Button variant="secondary" type="submit" className="w-100">

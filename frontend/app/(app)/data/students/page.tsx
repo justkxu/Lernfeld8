@@ -22,7 +22,7 @@ import ChoseModal from "@/components/choseModal";
 
 const StudentsPage = () => {
     const [students, setStudents] = useState<Student[]>([]);
-    const [classes, setClasses] = useState<Class[]>([]);
+    const [schoolClasses, setSchoolClasses] = useState<Class[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(15);
     const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +69,7 @@ const StudentsPage = () => {
             const student: Student[] = await getStudents();
             setStudents(student);
             const classes: Class[] = await getClasses();
-            setClasses(classes)
+            setSchoolClasses(classes)
             setIsLoading(false);
         }
         getStudent();
@@ -148,7 +148,7 @@ const StudentsPage = () => {
 
     function getClassName(school_class_id: number): string {
         let className = "";
-        classes.forEach(oneClas => {
+        schoolClasses.forEach(oneClas => {
             if (oneClas.id == school_class_id) {
                 className = oneClas.grade_id + oneClas.name;
             }
@@ -177,7 +177,7 @@ const StudentsPage = () => {
                         onHide={() => setInfoModalShow(false)}
                     />
                     <AddModal
-                        body={<AddStudentForm/>}
+                        body={<AddStudentForm schoolClasses={schoolClasses}/>}
                         footerFunc={closeAdd}
                         show={AddModalShow}
                         onHide={() => setAddModalShow(false)}
@@ -186,7 +186,7 @@ const StudentsPage = () => {
                         body={<EditStudentForm email={chosenUser!.email} birthday={chosenUser!.birthday}
                                                school_class_id={chosenUser!.student!.school_class_id.toString()}
                                                last_name={chosenUser!.last_name} name={chosenUser!.name}
-                                               username={chosenUser!.username}/>}
+                                               username={chosenUser!.username} schoolClasses={schoolClasses}/>}
                         footerFunc={closeEdit}
                         show={EditModalShow}
                         onHide={() => setEditModalShow(false)}
