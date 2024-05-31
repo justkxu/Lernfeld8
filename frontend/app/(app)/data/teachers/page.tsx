@@ -11,8 +11,8 @@ import Modal from "react-bootstrap/Modal";
 import AddTeacherForm from "@/components/addTeacherForm";
 import {deleteUserByUsername, getUserByUsername} from "@/api/Users";
 import {User} from "@/types/user";
-import EditStudentForm from "@/components/editStudentForm";
 import EditTeacherForm from "@/components/editTeacherForm";
+import EditModal from "@/components/editModal";
 
 const TeachersPage = () => {
     const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -20,7 +20,15 @@ const TeachersPage = () => {
     const [itemsPerPage] = useState(15);
     const [isLoading, setIsLoading] = useState(false);
     const [AddModalShow, setAddModalShow] = React.useState(false);
-    const [chosenTeacher, setChosenTeacher] = useState<Teacher>({account: undefined, id: 0});
+    const [chosenTeacher, setChosenTeacher] = useState<Teacher>({
+        abbreviation: "", account: {
+            id: '',
+            name: '',
+            last_name: '',
+            birthday: '',
+            username: ''
+        }, id: 0
+    });
     const [modalShow, setModalShow] = React.useState(false);
     const [infoText, setInfoText] = React.useState('');
     const [InfoModalShow, setInfoModalShow] = React.useState(false);
@@ -34,7 +42,15 @@ const TeachersPage = () => {
         name: "",
         parent: {},
         password: "",
-        student: {school_class_id: 0},
+        student: {
+            school_class_id: 0, id: 0, account: {
+                id: '',
+                name: '',
+                last_name: '',
+                birthday: '',
+                username: ''
+            }
+        },
         teacher: undefined,
         username: ""
     });
@@ -56,11 +72,11 @@ const TeachersPage = () => {
 
     const totalPages = Math.ceil(teachers.length / itemsPerPage);
 
-    function MyVerticallyCenteredModal(props: any) {
+    function ChoseModal(props: any) {
         return (
             <Modal
                 {...props}
-                size="lg"
+                size="l"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
@@ -69,7 +85,7 @@ const TeachersPage = () => {
                         What do you want to do?
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={"d-flex justify-content-center gap-5"}>
                     <Button onClick={handleDelete}>Delete</Button>
                     <Button onClick={handleEdit}>Edit</Button>
                 </Modal.Body>
@@ -98,31 +114,6 @@ const TeachersPage = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={closeAdd}>Schließen</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-    function EditModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Bearbeiten
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <EditTeacherForm email={chosenUser!.email} birthday={chosenUser!.birthday}
-                                     last_name={chosenUser!.last_name} name={chosenUser!.name}
-                                     username={chosenUser!.username} abbreviation={chosenTeacher.abbreviation}/>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeEdit}>Schließen</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -217,7 +208,7 @@ const TeachersPage = () => {
                                                                        onClick={() => setAddModalShow(true)}>Hinzufügen</Button>
             {teachers.length > 0 ? (
                 <>
-                    <MyVerticallyCenteredModal
+                    <ChoseModal
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                     />
@@ -230,6 +221,11 @@ const TeachersPage = () => {
                         onHide={() => setAddModalShow(false)}
                     />
                     <EditModal
+                        body={<EditTeacherForm email={chosenUser!.email} birthday={chosenUser!.birthday}
+                                               last_name={chosenUser!.last_name} name={chosenUser!.name}
+                                               username={chosenUser!.username}
+                                               abbreviation={chosenTeacher.abbreviation}/>}
+                        footerFunc={closeEdit}
                         show={EditModalShow}
                         onHide={() => setEditModalShow(false)}
                     />

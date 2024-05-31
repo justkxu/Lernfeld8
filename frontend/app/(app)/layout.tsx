@@ -6,8 +6,8 @@ import NavBar from "@/components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LernPlaner",
-  description: "Wilkommen zu deinem persönlichen Lernplaner!"
+  title: "Codify",
+  description: "Wilkommen zu Codify!"
 };
 
 export default function CustomLayout({

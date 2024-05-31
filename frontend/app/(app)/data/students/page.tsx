@@ -14,6 +14,7 @@ import {Class} from "@/types/class";
 import {User} from "@/types/user";
 import EditStudentForm from "@/components/editStudentForm";
 import AddStudentForm from "@/components/addStudentForm";
+import EditModal from "@/components/editModal";
 
 
 const StudentsPage = () => {
@@ -27,7 +28,15 @@ const StudentsPage = () => {
     const [EditModalShow, setEditModalShow] = React.useState(false);
     const [AddModalShow, setAddModalShow] = React.useState(false);
     const [infoText, setInfoText] = React.useState('');
-    const [chosenStudent, setChosenStudent] = useState<Student>({account: undefined, id: 0, school_class_id: 0});
+    const [chosenStudent, setChosenStudent] = useState<Student>({
+        account: {
+            id: '',
+            name: '',
+            last_name: '',
+            birthday: '',
+            username: ''
+        }, id: 0, school_class_id: 0
+    });
     const [chosenUser, setChosenUser] = useState<User>({
         birthday: "",
         contacts: [],
@@ -37,7 +46,15 @@ const StudentsPage = () => {
         name: "",
         parent: {},
         password: "",
-        student: {school_class_id: 0},
+        student: {
+            school_class_id: 0, id: 0, account: {
+                id: '',
+                name: '',
+                last_name: '',
+                birthday: '',
+                username: ''
+            }
+        },
         teacher: undefined,
         username: ""
     });
@@ -63,7 +80,7 @@ const StudentsPage = () => {
 
     async function handleDelete() {
         setModalShow(false);
-        const response = await deleteUserByUsername(chosenStudent.account.username);
+        const response = await deleteUserByUsername(chosenStudent!.account.username);
         if (response == 200) {
             setInfoText("Erfolgreich gelöscht")
         } else {
@@ -76,7 +93,7 @@ const StudentsPage = () => {
 
     async function handleEdit() {
         setModalShow(false);
-        const user: User = await getUserByUsername(chosenStudent.account.username);
+        const user: User = await getUserByUsername(chosenStudent!.account.username);
         setChosenUser(user)
         setEditModalShow(true);
     }
@@ -91,32 +108,6 @@ const StudentsPage = () => {
         const student: Student[] = await getStudents();
         setStudents(student);
         setAddModalShow(false);
-    }
-
-    function EditModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Bearbeiten
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <EditStudentForm email={chosenUser!.email} birthday={chosenUser!.birthday}
-                                     school_class_id={chosenUser!.student!.school_class_id.toString()}
-                                     last_name={chosenUser!.last_name} name={chosenUser!.name}
-                                     username={chosenUser!.username}/>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeEdit}>Schließen</Button>
-                </Modal.Footer>
-            </Modal>
-        );
     }
 
     function AddModal(props: any) {
@@ -143,11 +134,11 @@ const StudentsPage = () => {
     }
 
 
-    function MyVerticallyCenteredModal(props: any) {
+    function ChoseModal(props: any) {
         return (
             <Modal
                 {...props}
-                size="lg"
+                size="l"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
@@ -156,7 +147,7 @@ const StudentsPage = () => {
                         What do you want to do?
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={"d-flex justify-content-center gap-5"}>
                     <Button onClick={handleDelete}>Delete</Button>
                     <Button onClick={handleEdit}>Edit</Button>
                 </Modal.Body>
@@ -230,10 +221,11 @@ const StudentsPage = () => {
 
     return (
         <div>
-            <h1 className={"text-center display-4"}>Schüler</h1><Button className="w-100 p-3" onClick={() =>setAddModalShow(true)}>Hinzufügen</Button>
+            <h1 className={"text-center display-4"}>Schüler</h1><Button className="w-100 p-3"
+                                                                        onClick={() => setAddModalShow(true)}>Hinzufügen</Button>
             {students.length > 0 ? (
                 <>
-                    <MyVerticallyCenteredModal
+                    <ChoseModal
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                     />
@@ -248,6 +240,11 @@ const StudentsPage = () => {
                     />
 
                     <EditModal
+                        body={<EditStudentForm email={chosenUser!.email} birthday={chosenUser!.birthday}
+                                               school_class_id={chosenUser!.student!.school_class_id.toString()}
+                                               last_name={chosenUser!.last_name} name={chosenUser!.name}
+                                               username={chosenUser!.username}/>}
+                        footerFunc={closeEdit}
                         show={EditModalShow}
                         onHide={() => setEditModalShow(false)}
                     />

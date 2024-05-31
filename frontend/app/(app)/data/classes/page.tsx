@@ -10,6 +10,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import AddClassForm from "@/components/addClassForm";
 import EditClassForm from "@/components/editClassForm";
+import EditModal from "@/components/editModal";
 
 const ClassesPage = () => {
     const [classes, setClasses] = useState<Class[]>([]);
@@ -104,11 +105,11 @@ const ClassesPage = () => {
         );
     }
 
-    function MyVerticallyCenteredModal(props: any) {
+    function ChoseModal(props: any) {
         return (
             <Modal
                 {...props}
-                size="lg"
+                size="l"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
@@ -117,7 +118,7 @@ const ClassesPage = () => {
                         What do you want to do?
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={"d-flex justify-content-center gap-5"}>
                     <Button onClick={handleDelete}>Delete</Button>
                     <Button onClick={handleEdit}>Edit</Button>
                 </Modal.Body>
@@ -141,31 +142,6 @@ const ClassesPage = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={props.onHide}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-
-    function EditModal(props: any) {
-        return (
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Bearbeiten
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <EditClassForm school_class_id={chosenClass.id.toString()}
-                                   grade_id={chosenClass.grade_id.toString()}
-                                   head_teacher_id={chosenClass.head_teacher_id.toString()} name={chosenClass.name}/>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={closeEdit}>Schließen</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -205,7 +181,7 @@ const ClassesPage = () => {
                                                                         onClick={() => setAddModalShow(true)}>Hinzufügen</Button>
             {classes.length > 0 ? (
                 <>
-                    <MyVerticallyCenteredModal
+                    <ChoseModal
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                     />
@@ -220,6 +196,10 @@ const ClassesPage = () => {
                     />
 
                     <EditModal
+                        body={<EditClassForm school_class_id={chosenClass.id.toString()}
+                        grade_id={chosenClass.grade_id.toString()}
+                        head_teacher_id={chosenClass.head_teacher_id.toString()} name={chosenClass.name}/>}
+                        footerFunc={closeEdit}
                         show={EditModalShow}
                         onHide={() => setEditModalShow(false)}
                     />
