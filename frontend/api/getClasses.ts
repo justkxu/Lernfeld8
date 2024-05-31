@@ -32,7 +32,7 @@ export const addClass = async (payload: {name: string, grade_id: string, head_te
     if (!response.ok) {
         throw new Error(response.statusText);
     } else {
-        return await response.json();
+        return response.status;
     }
 };
 

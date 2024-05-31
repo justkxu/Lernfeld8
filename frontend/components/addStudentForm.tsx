@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import {addUser} from "@/api/Users";
 import {addStudentByUsername} from "@/api/getStudents";
+import addStudentForm from "@/components/addStudentForm";
 
 interface Values {
     username: string;
@@ -22,7 +23,8 @@ interface Values {
 const AddStudentForm: React.FC = () => {
     const [values, setValues] = useState<Values>({ username: '', email: '', password: '', confirmPassword: '', name: '', last_name: '', birthday: '', school_class_id: '' });
     const [error, setError] = useState<string | null>(null);
-    const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // New state variable
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [infoText, setInfoText] = useState<String>("");
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({
@@ -64,11 +66,20 @@ const AddStudentForm: React.FC = () => {
             "last_name": values.last_name,
             "birthday": values.birthday
         }
-        await addUser(payload);
+        const addUserResponse = await addUser(payload);
         payload={
             "school_class_id": values.school_class_id
         }
-        await addStudentByUsername(values.username, payload)
+        const addStudentResponse = await addStudentByUsername(values.username, payload)
+
+        if(addStudentResponse === 200 && addUserResponse === 200){
+            setInfoText("Erfolgreich hinzugefügt!");
+        }else if(addStudentResponse != 200 && addUserResponse === 200){
+            setInfoText("Nutzer wurde erstellt, es gab ein Problem bei der Erstellung des Schülers");
+        }else{
+            setInfoText("Nutzer konnte nicht erstellt werden");
+        }
+
         setIsSubmitted(true); // Set isSubmitted to true when form is submitted successfully
     };
 
@@ -78,7 +89,7 @@ const AddStudentForm: React.FC = () => {
                 <Card.Body>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     {isSubmitted ? (
-                        <p style={{ color: 'green' }}>Hinzugefügt!</p>
+                        <p>{infoText}</p>
                     ) : (
                         <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="formBasicName">
@@ -122,7 +133,7 @@ const AddStudentForm: React.FC = () => {
                             </Form.Group>
 
                             <Button variant="secondary" type="submit" className="w-100">
-                                Registrieren
+                                Hinzufügen
                             </Button>
                         </Form>
                     )}

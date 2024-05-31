@@ -22,6 +22,7 @@ function EditStudentForm(props: Values) {
     const [username] = useState<string>(props.username);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // New state variable
+    const [infoText, setInfoText] = useState<String>("");
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({
@@ -49,12 +50,20 @@ function EditStudentForm(props: Values) {
             "last_name": values.last_name,
             "birthday": values.birthday
         }
-        let userResponse  = await updateUserByUsername(username, payload)
+        const editUserResponse  = await updateUserByUsername(username, payload)
 
         payload = {
             "school_class_id": values.school_class_id,
         }
-        let studentResponse  = await updateStudentByUsername(values.username, payload)
+        const editStudentResponse  = await updateStudentByUsername(values.username, payload)
+
+        if(editStudentResponse === 200 && editUserResponse === 200){
+            setInfoText("Erfolgreich Bearbeitet!");
+        }else if(editStudentResponse != 200 && editUserResponse === 200){
+            setInfoText("Nutzer wurde bearbeitet, es gab ein Problem bei der Bearbeitung des Schülers");
+        }else{
+            setInfoText("Nutzer konnte nicht bearbeitet werden");
+        }
         setIsSubmitted(true);
     };
 
@@ -64,7 +73,7 @@ function EditStudentForm(props: Values) {
                 <Card.Body>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     {isSubmitted ? (
-                        <p style={{ color: 'green' }}>Erfolgreich bearbeitet</p> // Render success banner when form is submitted
+                        <p>{infoText}</p> // Render success banner when form is submitted
                     ) : (
                             <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="formBasicName">

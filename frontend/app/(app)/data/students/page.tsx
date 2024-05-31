@@ -65,9 +65,9 @@ const StudentsPage = () => {
         setModalShow(false);
         const response = await deleteUserByUsername(chosenStudent.account.username);
         if (response == 200) {
-            setInfoText("Successfully deleted")
+            setInfoText("Erfolgreich gelöscht")
         } else {
-            setInfoText("There was a problem deleting this user")
+            setInfoText("Es gab ein Problem beim Löschen des Schülers")
         }
         const student: Student[] = await getStudents();
         setStudents(student);

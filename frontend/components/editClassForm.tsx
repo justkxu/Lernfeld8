@@ -19,6 +19,7 @@ function EditStudentForm(props: Values) {
     const [values, setValues] = useState<Values>({name: props.name, grade_id: props.grade_id, head_teacher_id:props.head_teacher_id, school_class_id: props.school_class_id});
     const [error, setError] = useState<string | null>(null);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // New state variable
+    const [infoText, setInfoText] = useState<String>("");
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({
@@ -45,7 +46,13 @@ function EditStudentForm(props: Values) {
             "grade_id": values.grade_id,
             "head_teacher_id": values.head_teacher_id,
         }
-        await updateClassById(values.school_class_id, payload);
+        const editSchoolClassResponse = await updateClassById(values.school_class_id, payload);
+
+        if(editSchoolClassResponse === 200){
+            setInfoText("Erfolgreich bearbeitet!")
+        }else{
+            setInfoText("Klasse konnte nicht bearbeitet werden");
+        }
 
         setIsSubmitted(true);
     };
@@ -56,7 +63,7 @@ function EditStudentForm(props: Values) {
                 <Card.Body>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     {isSubmitted ? (
-                        <p style={{ color: 'green' }}>Erfolgreich bearbeitet</p> // Render success banner when form is submitted
+                        <p>{infoText}</p> // Render success banner when form is submitted
                     ) : (
                         <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="formBasicName">

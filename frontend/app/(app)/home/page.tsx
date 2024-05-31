@@ -1,8 +1,5 @@
 'use client'
 
-import { fetchHelloWorld } from '@/api/hello';
-import {getStudends} from "@/api/getStudents";
-
 export default function Home() {
   return (
       <div className={"container mt-4"}>

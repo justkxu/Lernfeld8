@@ -79,6 +79,6 @@ export const addUser = async (
     if (!response.ok) {
         throw new Error(response.statusText);
     } else {
-        return await response.json();
+        return response.status;
     }
 };

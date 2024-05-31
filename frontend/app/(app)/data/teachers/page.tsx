@@ -167,9 +167,9 @@ const TeachersPage = () => {
         setModalShow(false);
         const response = await deleteUserByUsername(chosenTeacher.account.username);
         if (response == 200) {
-            setInfoText("Successfully deleted")
+            setInfoText("Erfolgreich gelöscht")
         } else {
-            setInfoText("There was a problem deleting this user")
+            setInfoText("Es gab ein Problem beim Löschen des Lehrers")
         }
         const teacher: Teacher[] = await getTeachers();
         setTeachers(teacher);

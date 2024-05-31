@@ -16,7 +16,9 @@ interface Values {
 const AddStudentForm: React.FC = () => {
     const [values, setValues] = useState<Values>({name:'', grade_id:'', head_teacher_id:'' });
     const [error, setError] = useState<string | null>(null);
-    const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // New state variable
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [infoText, setInfoText] = useState<String>("");
+
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({
@@ -43,7 +45,14 @@ const AddStudentForm: React.FC = () => {
             "grade_id": values.grade_id,
             "head_teacher_id": values.head_teacher_id,
         }
-        await addClass(payload);
+        const addSchoolClassResponse = await addClass(payload);
+
+        if(addSchoolClassResponse === 200){
+            setInfoText("Erfolgreich hinzugefügt!");
+        }else{
+            setInfoText("Klasse konnte nicht erstellt werden");
+        }
+
         setIsSubmitted(true); // Set isSubmitted to true when form is submitted successfully
     };
 
@@ -53,7 +62,7 @@ const AddStudentForm: React.FC = () => {
                 <Card.Body>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     {isSubmitted ? (
-                        <p style={{ color: 'green' }}>Hinzugefügt!</p>
+                        <p>{infoText}</p>
                     ) : (
                         <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="formBasicName">
@@ -72,7 +81,7 @@ const AddStudentForm: React.FC = () => {
                             </Form.Group>
 
                             <Button variant="secondary" type="submit" className="w-100">
-                                Registrieren
+                                Hinzufügen
                             </Button>
                         </Form>
                     )}

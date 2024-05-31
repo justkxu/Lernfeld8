@@ -61,9 +61,9 @@ const ClassesPage = () => {
         setModalShow(false);
         const response = await deleteClassById(chosenClass.id.toString());
         if (response == 200) {
-            setInfoText("Successfully deleted")
+            setInfoText("Erfolgreich gelöscht")
         } else {
-            setInfoText("There was a problem deleting this Class")
+            setInfoText("Es gab ein Problem beim Löschen der Klasse")
         }
         const schoolClasses: Class[] = await getClasses();
         setClasses(schoolClasses);
