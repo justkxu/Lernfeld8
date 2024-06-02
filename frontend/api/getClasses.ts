@@ -36,7 +36,7 @@ export const addClass = async (payload: {name: string, grade_id: string, head_te
     }
 };
 
-export const updateClassById = async (school_class_id: string, payload: {name: string, grade_id: string, head_teacher_id: string}) => {
+export const updateClassById = async (school_class_id: string, payload: {id: string, name: string, grade_id: string, head_teacher_id: string}) => {
     const headers = {
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_BEARER}`,
     };

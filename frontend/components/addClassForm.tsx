@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import {addClass} from "@/api/getClasses";
+import {Teacher} from "@/types/teacher";
 
 interface Values {
     name: string,
@@ -13,7 +14,11 @@ interface Values {
     head_teacher_id: string,
 }
 
-const AddStudentForm: React.FC = () => {
+interface Props {
+    teachers: Teacher[];
+}
+
+const AddStudentForm: React.FC<Props> = ({teachers}) => {
     const [values, setValues] = useState<Values>({name:'', grade_id:'', head_teacher_id:'' });
     const [error, setError] = useState<string | null>(null);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -26,6 +31,16 @@ const AddStudentForm: React.FC = () => {
             [event.target.name]: event.target.value
         });
     };
+
+    function getTeacherName(teacher_id: number): string {
+        let teacherName = "";
+        teachers.forEach(oneTeacher => {
+            if (oneTeacher.id == teacher_id) {
+                teacherName = oneTeacher.account.name + oneTeacher.account.last_name;
+            }
+        })
+        return teacherName
+    }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -53,7 +68,7 @@ const AddStudentForm: React.FC = () => {
             setInfoText("Klasse konnte nicht erstellt werden");
         }
 
-        setIsSubmitted(true); // Set isSubmitted to true when form is submitted successfully
+        setIsSubmitted(true); // Set isSubmitted to true when form is submitted
     };
 
     return (
@@ -75,9 +90,16 @@ const AddStudentForm: React.FC = () => {
                                 <Form.Control type="text" placeholder="Klassenstufe eingeben" name="grade_id" value={values.grade_id} onChange={handleInputChange} />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicName">
-                                <Form.Label>Klassenlehrer id</Form.Label>
-                                <Form.Control type="text" placeholder="Klassenlehrer id eingeben" name="head_teacher_id" value={values.head_teacher_id} onChange={handleInputChange} />
+                            <Form.Group className="mb-3" controlId="formBasicClass">
+                                <Form.Label>Klassenlehrer</Form.Label>
+                                <Form.Select name="head_teacher_id" value={values.head_teacher_id} onChange={handleInputChange}>
+                                    <option value="">Wählen Sie einen Lehrer</option>
+                                    {teachers.map((teacher, index) => (
+                                        <option key={index} value={teacher.id}>
+                                            {getTeacherName(teacher.id)}
+                                        </option>
+                                    ))}
+                                </Form.Select>
                             </Form.Group>
 
                             <Button variant="secondary" type="submit" className="w-100">

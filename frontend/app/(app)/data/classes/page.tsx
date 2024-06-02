@@ -14,9 +14,12 @@ import EditModal from "@/components/editModal";
 import InfoModal from "@/components/infoModal";
 import AddModal from "@/components/addModal";
 import ChoseModal from "@/components/choseModal";
+import {Teacher} from "@/types/teacher";
+import {getTeachers} from "@/api/getTeacher";
 
 const ClassesPage = () => {
     const [classes, setClasses] = useState<Class[]>([]);
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(15);
     const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +42,8 @@ const ClassesPage = () => {
             setIsLoading(true);
             const schoolClasses: Class[] = await getClasses();
             setClasses(schoolClasses);
+            const teachers: Teacher[] = await getTeachers();
+            setTeachers(teachers);
             setIsLoading(false);
         }
         getSchoolClass();
@@ -135,7 +140,7 @@ const ClassesPage = () => {
                     />
 
                     <AddModal
-                        body={<AddClassForm/>}
+                        body={<AddClassForm teachers={teachers}/>}
                         footerFunc={closeAdd}
                         show={AddModalShow}
                         onHide={() => setAddModalShow(false)}
@@ -143,6 +148,7 @@ const ClassesPage = () => {
 
                     <EditModal
                         body={<EditClassForm school_class_id={chosenClass.id.toString()}
+                                             teachers={teachers}
                         grade_id={chosenClass.grade_id.toString()}
                         head_teacher_id={chosenClass.head_teacher_id.toString()} name={chosenClass.name}/>}
                         footerFunc={closeEdit}
